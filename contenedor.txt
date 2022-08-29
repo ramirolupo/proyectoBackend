@@ -1,0 +1,20 @@
+[
+  {
+    "title": "ramiro",
+    "price": 30,
+    "thumbnail": "url de la foto del producto",
+    "id": 1
+  },
+  {
+    "title": "title",
+    "price": "price",
+    "thumbnail": "url de la foto del producto",
+    "id": 2
+  },
+  {
+    "title": "title",
+    "price": "price",
+    "thumbnail": "url de la foto del producto",
+    "id": 3
+  }
+]
