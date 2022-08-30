@@ -8,6 +8,10 @@ server.on('error', err => console.log(`Error: ${err}`));
 
 const productos = new Contenedor('productos.txt');
 
+app.get('/', async (req, res) => {
+    res.send('Bienvenido!')
+})
+
 app.get('/productos', async (req, res) => {
     const mostrarProductos = await productos.getAll();
     res.send(mostrarProductos);
