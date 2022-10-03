@@ -1,36 +1,21 @@
-const express = require('express');
-const { Server: HttpServer } = require('http');
-const { Server: IOServer } = require('socket.io');
-const { engine } = require('express-handlebars');
-const { router, products, messages } = require('./routes/router.js');
-const fs = require('fs');
 
-const PORT = 8080;
+import express from "express";
+import routerProducts from './routes/routerProducts.js';
+import routerCarts from './routes/routerCart.js';
+
 const app = express();
-const httpserver = new HttpServer(app);
-const io = new IOServer(httpserver);
+const PORT = process.env.PORT || 8080;
 
-app.use(express.static('views'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.engine('handlebars', engine());
-app.set('views', './views');
-app.set('view engine', 'handlebars');
-
-app.use('/', router);
-
-io.on('connection', socket => {
-	io.sockets.emit('products', products);
-	io.sockets.emit('chat', messages);
-	socket.on('newProduct', newProduct => {
-		products.push(newProduct);
-		io.sockets.emit('products', products);
-	})
-	socket.on('newMessage', newMessage => {
-		messages.push(newMessage);
-		fs.writeFileSync('./chat/chat.txt', JSON.stringify(messages));
-		io.sockets.emit('chat', messages);
-	})
+app.use('/api/products', routerProducts);
+app.use('/api/cart', routerCarts);
+app.use('*', (req, res) => {
+	const path = req.params;
+	const method = req.method;
+	res.send({ error: -2, descripcion: `ruta '${path[0]}' método '${method}' no implementada` });
 });
 
-const server = httpserver.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-server.on('error', () => console.log(`Error: ${err}`));
+const server = app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));
+server.on('error', err => console.log(err));
